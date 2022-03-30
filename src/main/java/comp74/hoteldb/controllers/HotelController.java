@@ -63,9 +63,9 @@ public class HotelController {
         return null;
     }
     @GetMapping("/guests")
-    public Page<Guest> findAllGuests(@RequestParam(defaultValue = "0") Integer page){
+    public Page<Guest> findAllGuests(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "id") String sort){
         PageRequest pageInfo;
-        pageInfo = PageRequest.of(page,12);
+        pageInfo = PageRequest.of(page,12, Sort.by(sort));
         return (Page<Guest>) guestRepo.findAll(pageInfo);
     }
 
