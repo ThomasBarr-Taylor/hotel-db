@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,6 +31,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
+@CrossOrigin
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,6 +31,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
+@CrossOrigin
 public class Guest {
 
     @Id

@@ -1,13 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        td,
+        th,
+        table {
+            border: thin solid black;
+            border-collapse: collapse;
+            background-color: #EEE;
+        }
+    </style>
 </head>
+
 <body>
-    <H1>Hotel test client</H1>
-    <a href="http://localhost:8080/api/rooms?page=1">Get rooms</a>
+    <header>
+        <H1>Hotel test client</H1>
+    </header>
+    <label for="pageNumber">What page would you like</label>
+    <input type="number" name="page" id="page" value="1" min="1">
+    <label for="sortingDropdown">What would you like the data to be sorted in</label>
+    <select name="sortingDropdown" id="sortingDropdown">
+        <option value="id">ID</option>
+        <option value="firstName">First Name</option>
+        <option value="lastName">Last Name</option>
+        <option value="emailAddress">Email</option>
+        <option value="country">Country</option>
+        <option value="state">State</option>
+        <option value="phoneNumber">Phone Number</option>
+        <option value="reservations">Reservations</option>
+    </select>
+    <button id="getGuests">select</button>
+    <p></p>
+    <table id="guestsTable">
+    </table>
+    <p></p>
+    <div id="pageNumb"></div>
+    <div id="pageTotal"></div>
+    <script>
+        window.onload = () => {
+            document.getElementById("getGuests").onclick = getData
+        }
+        var guestsTable = document.getElementById("guestsTable")
+
+
+        let table = `<tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Country</th>
+                <th>State</th>
+                <th>Phone Number</th>
+                <th>Reservations</th>
+            </tr>`
+        guestsTable.innerHTML = table
+        //function getData() {
+        function getData() {
+            var total = document.getElementById("pageTotal")
+            var page = parseInt(document.getElementById("page").value)
+            var sort = document.getElementById("sortingDropdown").value
+            let url = "http://localhost:8080/api/guests"
+            if (page != "") {
+                page = "?page=" + page
+                if (sort != "")
+                    sort = "&sort=" + sort
+            }
+            else {
+                page=1
+                sort = ""
+            }
+            url = url + page + sort
+            table = `<tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Country</th>
+                <th>State</th>
+                <th>Phone Number</th>
+                <th>Reservations</th>
+            </tr>`
+        guestsTable.innerHTML = table
+            fetch(url)
+                .then(response => response.json())
+                .then(json => {
+                    let keys = Object.keys(json.content)
+                    keys.forEach(key => {
+                        table += `<tr>`
+                        table += `<td>${json.content[key].id}</td>`
+                        table += `<td>${json.content[key].firstName}</td>`
+                        table += `<td>${json.content[key].lastName}</td>`
+                        table += `<td>${json.content[key].emailAddress}</td>`
+                        table += `<td>${json.content[key].address}</td>`
+                        table += `<td>${json.content[key].country}</td>`
+                        table += `<td>${json.content[key].state}</td>`
+                        table += `<td>${json.content[key].phoneNumber}</td>`
+                        if (json.content[key].reservations.id == undefined)
+                            table += `<td></td>`
+                        else
+                            table += `<td>${json.content[key].reservations.resDate}</td>`
+                        table += `</tr>`
+                        guestsTable.innerHTML = table
+                        pageNumb.innerHTML = `current page = ${json.number}`
+                        total.innerHTML = `total pages = ${json.totalPages-1}`
+                        //guestsTable.innerHTML += "<td>" + JSON.stringify(json.content[i].reservation) + "</td></tr>"
+                    });
+                })
+                .catch(error => alert(error))
+        }
+    </script>
 </body>
+
 </html>
